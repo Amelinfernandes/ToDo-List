@@ -1,6 +1,7 @@
 //jshint esversion:6
 
 const express = require("express");
+require('dotenv').config();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
@@ -8,13 +9,27 @@ const _ = require("lodash");
 //const date = require(__dirname + "/date.js");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+mongoose.set('strictQuery', false);
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+}
+
+
 
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb+srv://admin-amelin:Amyadmin@cluster0.jw8zr9w.mongodb.net/todolistDB", {useNewUrlParser: true});
+//mongoose.connect("mongodb+srv://admin-amelin:Amyadmin@cluster0.jw8zr9w.mongodb.net/todolistDB", {useNewUrlParser: true});
 
 // const items = ["Buy Food", "Cook Food", "Eat Food"];
 // const workItems = [];
@@ -149,6 +164,12 @@ app.get("/about", function(req, res){
   res.render("about");
 });
 
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
+app.listen(PORT, function() {
+  console.log(`Server started on port ${PORT}`);
+});
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
 });
