@@ -164,9 +164,9 @@ app.get("/about", function(req, res){
   res.render("about");
 });
 
-app.listen(PORT, function() {
-  console.log(`Server started on port ${PORT}`);
-});
+// app.listen(PORT, function() {
+//   console.log(`Server started on port ${PORT}`);
+// });
 
 connectDB().then(() => {
   app.listen(PORT, () => {
